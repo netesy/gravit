@@ -28,11 +28,7 @@ function (e, t, n) {
         return "document";
       }),
       (s.prototype.isEnabled = function () {
-        return (
-          r.isOnline() &&
-          !gDesigner.isOffline(6e5) &&
-          gDesigner.getApplicationManager().isCreatingNewDocumentEnabled()
-        );
+        return false;
       }),
       (s.prototype.execute = function () {
         gContainer.newDocumentActionPerformed(),

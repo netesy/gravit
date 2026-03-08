@@ -35,7 +35,7 @@ function (e, t, n) {
         );
       }),
       (r.prototype.execute = function () {
-        gDesigner.openNewDocumentDialog({ closable: !0, showCloudOptions: !0 });
+        gDesigner.openNewDocumentDialog({ closable: !0 });
       }),
       (r.prototype.toString = function () {
         return "[Object GOpenWelcomeScreenAction]";

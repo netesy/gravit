@@ -40,9 +40,7 @@ function (e, t, n) {
         gContainer.newDocumentActionPerformed(),
           gDesigner.openNewDocumentDialog({
             closable: !0,
-            showCloudOptions: !0,
             defaultOption: "start-option",
-            newOrFromTemplate: !0,
           });
       }),
       (s.prototype.toString = function () {
