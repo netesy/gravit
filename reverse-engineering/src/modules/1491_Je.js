@@ -1174,7 +1174,7 @@ function (e, t, n) {
             .attr("id", "mainframe")
             .css("display", "none")
             .prependTo(t));
-        var n = (this._frame = $("<div></div>").appendTo(this._mainframe)),
+        var n = (this._frame = $("<div></div>").addClass("frame").appendTo(this._mainframe)),
           o = $("<div></div>").attr("id", F.Windows.id).appendTo(n);
         this._windows = new O(o);
         var c = $("<div></div>").attr("id", F.Info.id).appendTo(n);
@@ -1337,6 +1337,7 @@ function (e, t, n) {
           s.AUTO_SAVE_ENABLED && (this._autoSaveManager = te.getInstance()),
           this.getCursorManager().init(),
           this._updateLayout(),
+          requestAnimationFrame(() => this.relayout()),
           this._initAmplitudeProperties(),
           this._updateState();
       }),

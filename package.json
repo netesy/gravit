@@ -1,8 +1,22 @@
 {
+  "name": "gravit-designer-local",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Locally hosted Gravit Designer with reverse-engineered module system",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "build": "node reverse-engineering/build-bundle.cjs",
+    "icons": "node scripts/generate-icons.cjs",
+    "serve": "npm run build && npm start",
+    "clean": "node -e \"require('fs').rmSync('public/designer.browser.dev.js',{force:true}); console.log('Cleaned');\""
+  },
   "dependencies": {
-    "axios": "^1.10.0",
     "express": "^5.1.0",
-    "fs-extra": "^11.3.0",
     "ws": "^8.18.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

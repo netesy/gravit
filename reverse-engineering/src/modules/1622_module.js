@@ -10,13 +10,13 @@ function (e, t, n) {
     e.exports = [
       {
         name: "contact-us",
-        link: gApi.link.getSupportUrl(),
+        link: "https://github.com/rathlinus/gravit-designer",
         category: o.CATEGORY_HELP_SUPPORT,
         group: "help/support",
       },
       {
         name: "user-guide",
-        link: gApi.link.getDocumentationUrl(),
+        link: "/docs/index.html",
         category: o.CATEGORY_HELP_LEARN,
         group: "help/learn",
       },
@@ -28,13 +28,7 @@ function (e, t, n) {
       },
       {
         name: "request-new-feature",
-        link: gApi.link.getRequestNewFeatureUrl(),
-        category: o.CATEGORY_HELP,
-        group: "help",
-      },
-      {
-        name: "eula",
-        link: "http://www.corel.com/eula",
+        link: "https://github.com/rathlinus/gravit-designer/issues",
         category: o.CATEGORY_HELP,
         group: "help",
       },

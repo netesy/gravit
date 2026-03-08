@@ -486,17 +486,11 @@ function (e, t, n) {
             plugins: [],
             actions: [new ae(), new yt(), new re(), new xe(), new Se()]
               .concat([
-                new pt(pt.Actions.Open),
                 new vt(),
                 new Pe(),
                 new Le(zn),
                 ...qn.map((e) => new Le(e)),
-                new pt(pt.Actions.SaveAs),
-                new St(),
-                new Et(),
                 new Wt(),
-                new gt(),
-                new Rt(),
               ])
               .concat([new De()])
               .concat([
@@ -526,9 +520,6 @@ function (e, t, n) {
               ])
               .concat(
                 [
-                  new Tt(),
-                  new Gt(),
-                  new At(),
                   new Ae(),
                   new ee(),
                   new Pt(),
@@ -700,30 +691,14 @@ function (e, t, n) {
                 new xt(new Lt()),
               ])
               .concat(
-                ft.Links.filter((e) => "eula" !== e.name).map((e) => new ft(e)),
+                ft.Links.map((e) => new ft(e)),
                 _ ? [] : new wt(),
-                new Dt(),
                 new mt()
               )
-              .concat(
-                ...(no()
-                  ? []
-                  : kn.GravitLanguages.map(
-                      (e) => new ht(e, Xn.getTranslationRealName(e))
-                    ))
-              )
               .concat([
-                ...(_ ? [new Nt("STAGING", ro), new Nt("BETA", y)] : []),
                 new bt(),
-                ...(C ? [new Ct()] : []),
-                ...ft.Links.filter((e) => "eula" === e.name).map(
-                  (e) => new ft(e)
-                ),
-                new Mt(),
-                ...(_ ? [new Ot()] : []),
                 new Bt(),
-              ])
-              .concat([new It(), new kt()]),
+              ]),
             sidebars: [
               new dn(),
               ...(i.HAS_ANNOTATIONS ? [new pn()] : []),
