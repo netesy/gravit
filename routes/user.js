@@ -2,18 +2,33 @@ const { Router } = require("express");
 const router = Router();
 
 const LANGUAGES = {
-  0: "de-DE", 1: "en", 2: "zh-CN", 3: "pt-BR", 4: "es-ES",
-  5: "fr-FR", 6: "pl-PL", 7: "ru-RU", 8: "tr-TR", 9: "cs-CZ",
-  10: "zh-TW", 11: "it-IT", 12: "ja-JP", 13: "nl-NL", 14: "sv-SE",
+  0: "de-DE",
+  1: "en",
+  2: "zh-CN",
+  3: "pt-BR",
+  4: "es-ES",
+  5: "fr-FR",
+  6: "pl-PL",
+  7: "ru-RU",
+  8: "tr-TR",
+  9: "cs-CZ",
+  10: "zh-TW",
+  11: "it-IT",
+  12: "ja-JP",
+  13: "nl-NL",
+  14: "sv-SE",
 };
 
 const LOCALE_TO_CODE = Object.fromEntries(
-  Object.entries(LANGUAGES).map(([k, v]) => [v.toLowerCase(), Number(k)])
+  Object.entries(LANGUAGES).map(([k, v]) => [v.toLowerCase(), Number(k)]),
 );
 
 function resolveLocale(langOrLocale) {
   if (langOrLocale in LANGUAGES) return LANGUAGES[langOrLocale];
-  if (typeof langOrLocale === "string" && LOCALE_TO_CODE[langOrLocale.toLowerCase()] !== undefined) {
+  if (
+    typeof langOrLocale === "string" &&
+    LOCALE_TO_CODE[langOrLocale.toLowerCase()] !== undefined
+  ) {
     return langOrLocale;
   }
   return "en";
@@ -26,14 +41,19 @@ const USER_PROFILE = {
   email_expire: null,
   login: null,
   name: "Test User",
-  avatar: "https://gravatar.com/avatar/2b6848a6719e6c2e6747d506d1ff57b3?s=64&d=retro",
+  avatar:
+    "https://gravatar.com/avatar/2b6848a6719e6c2e6747d506d1ff57b3?s=64&d=retro",
   admin: null,
   flash: null,
   last_seen: new Date().toISOString(),
   app: "designer",
   last_update: new Date().toISOString(),
   stats: {},
-  address: "", city: "", zip: "", state: "", country: "",
+  address: "",
+  city: "",
+  zip: "",
+  state: "",
+  country: "",
   trial_created: "2021-09-22T19:58:35.018Z",
   trial_expire: "2099-10-07T19:58:35.018Z",
   pro_created: null,
