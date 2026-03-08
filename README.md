@@ -21,14 +21,6 @@
     <td><img src="public/assets/help/Screenshot.png" alt="Welcome Screen" width="420" /></td>
     <td><img src="docs/images/new-design-custom.png" alt="New Document" width="420" /></td>
   </tr>
-  <tr>
-    <td align="center"><strong>Canvas &amp; Tools</strong></td>
-    <td align="center"><strong>Template Gallery</strong></td>
-  </tr>
-  <tr>
-    <td><img src="docs/images/designer-trunk.gravit.io_.png" alt="Designer Canvas" width="420" /></td>
-    <td><img src="docs/images/templates1.png" alt="Templates" width="420" /></td>
-  </tr>
 </table>
 
 ## Features
