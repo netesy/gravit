@@ -1,7 +1,7 @@
 # Gravit Designer — Self-Hosted Edition
 
 <p align="center">
-  <img src="public/assets/img/brand/gravit-designer.svg" alt="Gravit Designer Logo" width="200" />
+  <img src="public/assets/img/brand/gravit-designer.svg" alt="Gravit Designer Logo" width="400" />
 </p>
 
 <p align="center">
