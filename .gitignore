@@ -37,6 +37,9 @@ coverage/
 .eslintcache
 
 
+# Build output
+releases/
+
 # Package manager locks
 package-lock.json
 

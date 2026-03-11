@@ -39,19 +39,45 @@ app.get("/i18n-url/:locale/designer", (_req, res) => {
   res.json({});
 });
 
-// License check (GET)
+// License check (GET) — returns data consumed directly by the License constructor
 app.get("/license", (_req, res) => {
   res.json({
-    plan: "pro",
-    status: "active",
-    expireDate: "2099-12-31T23:59:59.000Z",
-    features: [],
+    license: "pro",
+    expire: "2099-12-31T23:59:59.000Z",
+    created: "2021-09-22T19:58:35.018Z",
+    legacy: false,
   });
 });
 
 // Subscription test
 app.get("/subscription/test", (_req, res) => {
-  res.json({ active: true, plan: "pro" });
+  res.json({ active: true, plan: "pro", status: 1 });
+});
+
+// Subscription endpoints
+app.get("/subscription/nextbillingdate", (_req, res) => {
+  res.json({ date: "2099-12-31T23:59:59.000Z" });
+});
+app.get("/subscription/lifetime", (_req, res) => {
+  res.json({ lifetime: true });
+});
+
+// Quota
+app.get("/quota", (_req, res) => {
+  res.json({ quota: { pro: {}, free: {} } });
+});
+
+// Subscription history
+app.get("/ever-subscribed", (_req, res) => {
+  res.json({ subscribed: true });
+});
+app.get("/total-subscription-days", (_req, res) => {
+  res.json({ days: 9999 });
+});
+
+// Pro paywall (return empty page so client doesn't 404)
+app.get("/pro/paywall/:page", (_req, res) => {
+  res.send("");
 });
 
 // File listing

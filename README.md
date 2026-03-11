@@ -1,7 +1,7 @@
 # Gravit Designer — Self-Hosted Edition
 
 <p align="center">
-  <img src="public/assets/img/brand/gravit-designer.svg" alt="Gravit Designer Logo" width="400" />
+  <img src="public/assets/img/brand/gravit-designer.svg" alt="Gravit Designer Logo" width="200" />
 </p>
 
 <p align="center">
@@ -26,13 +26,37 @@
 ## Features
 
 - **Fully offline** — runs on `localhost` with zero external dependencies at runtime
+- **Native desktop apps** — pre-built Electron binaries for Windows and Linux (macOS buildable on Mac)
 - **Pro license unlocked** — all premium features available out of the box
 - **Express server** with static file serving, WebSocket support, and API stubs
 - **Multi-language support** — 15 locales including EN, DE, FR, ES, JA, ZH, and more
 - **Built-in documentation** — complete HTML user guide served at `/docs`
 - **Reverse-engineering toolkit** — tools to extract, analyze, and reconstruct the minified source
 
-## Quick Start
+## Desktop App (Releases)
+
+Pre-built native Electron apps are available in the `releases/` directory:
+
+| Platform    | File                                           | Type                  |
+| ----------- | ---------------------------------------------- | --------------------- |
+| **Windows** | `Gravit Designer Setup 1.0.0.exe`              | NSIS Installer        |
+| **Windows** | `Gravit Designer 1.0.0.exe`                    | Portable (no install) |
+| **Linux**   | `gravit-designer-local-1.0.0-linux-x64.tar.gz` | Standalone archive    |
+
+> **macOS**: Must be built on a Mac — see [Building Desktop Apps](#building-desktop-apps) below.
+
+### Running the Desktop App
+
+- **Windows Installer** — double-click `Gravit Designer Setup 1.0.0.exe` and follow the wizard
+- **Windows Portable** — run `Gravit Designer 1.0.0.exe` directly, no installation needed
+- **Linux** — extract the tar.gz, then run the `gravit-designer-local` binary:
+  ```bash
+  tar xzf gravit-designer-local-1.0.0-linux-x64.tar.gz
+  cd gravit-designer-local-1.0.0-linux-x64
+  ./gravit-designer-local
+  ```
+
+## Quick Start (Server Mode)
 
 ### Prerequisites
 
@@ -89,6 +113,13 @@ gravit-designer/
 ├── scripts/
 │   └── generate-icons.cjs     # SVG icon generator
 │
+├── electron-main.js           # Electron main process
+│
+├── releases/                  # Pre-built desktop apps
+│   ├── Gravit Designer Setup 1.0.0.exe   # Windows installer
+│   ├── Gravit Designer 1.0.0.exe         # Windows portable
+│   └── *-linux-x64.tar.gz               # Linux archive
+│
 └── reverse-engineering/       # Source analysis toolkit
     ├── build-bundle.cjs       # Rebuilds dev bundle
     ├── extract-all-modules.cjs
@@ -102,14 +133,19 @@ gravit-designer/
 
 ## NPM Scripts
 
-| Script          | Description                                            |
-| --------------- | ------------------------------------------------------ |
-| `npm start`     | Start the server on port 3100                          |
-| `npm run dev`   | Start with `--watch` for auto-reload                   |
-| `npm run build` | Rebuild the dev bundle from reverse-engineered modules |
-| `npm run icons` | Generate SVG icon set                                  |
-| `npm run serve` | Build + start in one command                           |
-| `npm run clean` | Remove the generated dev bundle                        |
+| Script               | Description                                            |
+| -------------------- | ------------------------------------------------------ |
+| `npm start`          | Start the server on port 3100                          |
+| `npm run dev`        | Start with `--watch` for auto-reload                   |
+| `npm run build`      | Rebuild the dev bundle from reverse-engineered modules |
+| `npm run icons`      | Generate SVG icon set                                  |
+| `npm run serve`      | Build + start in one command                           |
+| `npm run clean`      | Remove the generated dev bundle                        |
+| `npm run electron`   | Launch as Electron desktop app (dev)                   |
+| `npm run dist:win`   | Build Windows installer + portable `.exe`              |
+| `npm run dist:linux` | Build Linux `.tar.gz` archive                          |
+| `npm run dist:mac`   | Build macOS `.dmg` (requires macOS host)               |
+| `npm run dist:all`   | Build for all platforms at once                        |
 
 ## Server API
 
@@ -182,6 +218,7 @@ See [reverse-engineering/README.md](reverse-engineering/README.md) for the full 
 
 | Component | Technology                        |
 | --------- | --------------------------------- |
+| Runtime   | Electron 33                       |
 | Server    | Node.js + Express 5               |
 | WebSocket | ws 8.x                            |
 | Client    | Gravit Designer (Webpack bundle)  |
@@ -219,6 +256,36 @@ Gravit Designer ships with two themes out of the box:
 # Run on a custom port
 PORT=8080 npm start
 ```
+
+## Building Desktop Apps
+
+To rebuild the Electron apps from source:
+
+```bash
+npm install
+
+# Windows (NSIS installer + portable)
+npm run dist:win
+
+# Linux (tar.gz archive)
+npm run dist:linux
+
+# macOS (requires building on a Mac)
+npm run dist:mac
+
+# All platforms (run on macOS for full coverage)
+npm run dist:all
+```
+
+Output goes to the `releases/` directory. Cross-compilation notes:
+
+| Host OS | Can build for         |
+| ------- | --------------------- |
+| Windows | Windows, Linux        |
+| macOS   | Windows, macOS, Linux |
+| Linux   | Windows, Linux        |
+
+> **macOS builds require a macOS host** — this is an Electron/code-signing limitation. Use a Mac or a CI service like GitHub Actions for macOS builds.
 
 ## License
 
