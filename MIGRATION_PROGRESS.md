@@ -18,7 +18,7 @@
 - [x] Build System (`Makefile`)
 
 ### Module Groups (Legacy -> Native)
-- [ ] Core Objects (`reverse-engineering/reconstructed/infinity/core/`)
+- [x] Core Objects (`reverse-engineering/reconstructed/infinity/core/`)
 - [ ] Scene Management (`reverse-engineering/reconstructed/infinity/scene/`)
 - [ ] Rendering Engine (`reverse-engineering/reconstructed/infinity/rendering/`)
 - [ ] Editor Actions (`reverse-engineering/reconstructed/editor/`)

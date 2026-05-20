@@ -3,8 +3,12 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "core/GPoint.hpp"
+#include "core/GRect.hpp"
 
 namespace vectma {
+
+class RenderPipeline;
 
 /**
  * @brief Abstract polymorphic base class for all scene objects.
@@ -26,6 +30,11 @@ public:
 
     void addChild(std::unique_ptr<CanvasNode> child);
     const std::vector<std::unique_ptr<CanvasNode>>& getChildren() const;
+
+    // Geometric Interfaces
+    virtual void draw(RenderPipeline& renderer) = 0;
+    virtual bool containsPoint(const GPoint& point) const = 0;
+    virtual GRect computeBoundingBox() const = 0;
 
 protected:
     CanvasNode* m_parent = nullptr;
