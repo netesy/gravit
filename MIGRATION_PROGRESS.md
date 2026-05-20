@@ -19,7 +19,7 @@
 
 ### Module Groups (Legacy -> Native)
 - [x] Core Objects (`reverse-engineering/reconstructed/infinity/core/`)
-- [ ] Scene Management (`reverse-engineering/reconstructed/infinity/scene/`)
+- [x] Scene Management (`reverse-engineering/reconstructed/infinity/scene/`)
 - [ ] Rendering Engine (`reverse-engineering/reconstructed/infinity/rendering/`)
 - [ ] Editor Actions (`reverse-engineering/reconstructed/editor/`)
 
