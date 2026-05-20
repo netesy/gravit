@@ -10,4 +10,6 @@ struct GPoint {
     GPoint(double x, double y) : x(x), y(y) {}
 };
 
+using Point2D = GPoint;
+
 } // namespace vectma

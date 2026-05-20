@@ -33,11 +33,11 @@ public:
     // Viewport
     void setViewMatrix(const GTransform& matrix) { m_viewMatrix = matrix; }
     GTransform getViewMatrix() const { return m_viewMatrix; }
-    GPoint screenToCanvas(const GPoint& screenPos) const;
+    Point2D screenToCanvas(const Point2D& screenPos) const;
 
     // Mouse Lifecycle
-    void handleMouseDown(const GPoint& screenPos);
-    void handleMouseMove(const GPoint& screenPos);
+    void handleMouseDown(const Point2D& screenPos);
+    void handleMouseMove(const Point2D& screenPos);
     void handleMouseUp();
 
     // Interaction State
@@ -52,10 +52,10 @@ private:
     GTransform m_viewMatrix = GTransform::Identity();
 
     bool m_isDragging = false;
-    GPoint m_dragStart;
+    Point2D m_dragStart;
     GRect m_marqueeRect;
 
-    void updateMarquee(const GPoint& currentCanvasPos);
+    void updateMarquee(const Point2D& currentCanvasPos);
     void performSelection(const GRect& rect);
 };
 
