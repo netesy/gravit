@@ -8,9 +8,11 @@ SceneGraph::SceneGraph() = default;
 
 SceneGraph::~SceneGraph() = default;
 
-void SceneGraph::draw(RenderPipeline& renderer) {
+void SceneGraph::render(RenderPipeline& pipeline) const {
     for (const auto& child : m_children) {
-        child->draw(renderer);
+        if (child && child->isVisible()) {
+            child->render(pipeline);
+        }
     }
 }
 
@@ -56,7 +58,6 @@ void SceneGraph::moveDown(size_t index) {
 void SceneGraph::groupNodes(const std::vector<size_t>& indices) {
     if (indices.empty()) return;
 
-    // Sort indices in descending order to avoid shift issues during removal
     std::vector<size_t> sortedIndices = indices;
     std::sort(sortedIndices.rbegin(), sortedIndices.rend());
 
@@ -70,9 +71,7 @@ void SceneGraph::groupNodes(const std::vector<size_t>& indices) {
         }
     }
 
-    // Reverse the group children because we added them in reverse order of indices
     std::reverse(group->m_children.begin(), group->m_children.end());
-
     m_children.insert(m_children.begin() + insertAt, std::move(group));
 }
 

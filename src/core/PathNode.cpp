@@ -6,17 +6,16 @@ namespace vectma {
 PathNode::PathNode(const std::string& pathData)
     : m_pathData(pathData) {}
 
-void PathNode::draw(RenderPipeline& renderer) {
-    renderer.drawPath(m_pathData);
+void PathNode::render(RenderPipeline& pipeline) const {
+    pipeline.drawPath(*this);
 }
 
 bool PathNode::containsPoint(const GPoint& point) const {
-    // Placeholder for path containment logic
+    (void)point;
     return false;
 }
 
 GRect PathNode::computeBoundingBox() const {
-    // Placeholder for path bbox calculation
     return GRect(0, 0, 0, 0);
 }
 

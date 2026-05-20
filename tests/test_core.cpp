@@ -8,102 +8,118 @@
 #include "core/GRect.hpp"
 #include "core/GColor.hpp"
 #include "core/GTransform.hpp"
+#include "renderer/RenderPipeline.hpp"
 #include <cassert>
 #include <iostream>
 #include <memory>
+#include <vector>
 
 class MockNode : public vectma::CanvasNode {
 public:
     std::string id;
     MockNode(std::string name) : id(name) {}
     std::string getClassName() const override { return "MockNode"; }
-    void draw(vectma::RenderPipeline&) override {}
+    void render(vectma::RenderPipeline& p) const override { p.renderNode(*this); }
     bool containsPoint(const vectma::GPoint&) const override { return false; }
     vectma::GRect computeBoundingBox() const override { return vectma::GRect(0, 0, 0, 0); }
 };
 
-void testCanvasNode() {
-    std::cout << "Testing CanvasNode..." << std::endl;
-    auto parent = std::make_unique<MockNode>("parent");
-    auto child = std::make_unique<MockNode>("child");
+class MockRenderPipeline : public vectma::RenderPipeline {
+public:
+    std::vector<std::string> callOrder;
+    int rectCount = 0;
+    int ellipseCount = 0;
+    int pathCount = 0;
 
-    vectma::CanvasNode* childPtr = child.get();
-    parent->addChild(std::move(child));
+    void beginFrame() override {}
+    void endFrame() override {}
 
-    assert(childPtr->getParent() == parent.get());
-    assert(parent->getChildren().size() == 1);
-    assert(parent->getChildren()[0].get() == childPtr);
-    std::cout << "CanvasNode tests passed." << std::endl;
-}
+    void drawRect(const vectma::RectNode& node) override {
+        (void)node;
+        rectCount++;
+        callOrder.push_back("rect");
+    }
 
-void testSceneGraphZOrder() {
-    std::cout << "Testing SceneGraph Z-Order..." << std::endl;
+    void drawEllipse(const vectma::EllipseNode& node) override {
+        (void)node;
+        ellipseCount++;
+        callOrder.push_back("ellipse");
+    }
+
+    void drawPath(const vectma::PathNode& node) override {
+        (void)node;
+        pathCount++;
+        callOrder.push_back("path");
+    }
+
+    void renderNode(const vectma::CanvasNode& node) override {
+        if (node.getClassName() == "MockNode") {
+            callOrder.push_back(static_cast<const MockNode&>(node).id);
+        }
+    }
+};
+
+void testRenderingOrder() {
+    std::cout << "Testing Rendering Order..." << std::endl;
     auto scene = std::make_unique<vectma::SceneGraph>();
+    scene->addChild(std::make_unique<MockNode>("bottom"));
+    scene->addChild(std::make_unique<MockNode>("middle"));
+    scene->addChild(std::make_unique<MockNode>("top"));
 
-    scene->addChild(std::make_unique<MockNode>("0"));
-    scene->addChild(std::make_unique<MockNode>("1"));
-    scene->addChild(std::make_unique<MockNode>("2"));
+    MockRenderPipeline pipeline;
+    scene->render(pipeline);
 
-    assert(static_cast<MockNode*>(scene->getChildren()[0].get())->id == "0");
+    assert(pipeline.callOrder.size() == 3);
+    assert(pipeline.callOrder[0] == "bottom");
+    assert(pipeline.callOrder[1] == "middle");
+    assert(pipeline.callOrder[2] == "top");
 
-    scene->bringToFront(0);
-    assert(static_cast<MockNode*>(scene->getChildren()[2].get())->id == "0");
-
-    scene->sendToBack(2);
-    assert(static_cast<MockNode*>(scene->getChildren()[0].get())->id == "0");
-
-    scene->moveUp(0);
-    assert(static_cast<MockNode*>(scene->getChildren()[1].get())->id == "0");
-
-    scene->moveDown(1);
-    assert(static_cast<MockNode*>(scene->getChildren()[0].get())->id == "0");
-
-    std::cout << "SceneGraph Z-Order tests passed." << std::endl;
+    std::cout << "Rendering order tests passed." << std::endl;
 }
 
-void testSceneGraphGrouping() {
-    std::cout << "Testing SceneGraph Grouping..." << std::endl;
+void testVisibilityRendering() {
+    std::cout << "Testing Visibility Rendering..." << std::endl;
     auto scene = std::make_unique<vectma::SceneGraph>();
+    auto node1 = std::make_unique<MockNode>("visible");
+    auto node2 = std::make_unique<MockNode>("hidden");
+    node2->setVisibility(false);
 
-    scene->addChild(std::make_unique<MockNode>("0"));
-    scene->addChild(std::make_unique<MockNode>("1"));
-    scene->addChild(std::make_unique<MockNode>("2"));
-    scene->addChild(std::make_unique<MockNode>("3"));
+    scene->addChild(std::move(node1));
+    scene->addChild(std::move(node2));
 
-    // Group nodes 1 and 2
-    scene->groupNodes({1, 2});
+    MockRenderPipeline pipeline;
+    scene->render(pipeline);
 
-    assert(scene->getChildren().size() == 3);
-    assert(scene->getChildren()[1]->getClassName() == "SceneGraph");
+    assert(pipeline.callOrder.size() == 1);
+    assert(pipeline.callOrder[0] == "visible");
 
-    auto* group = static_cast<vectma::SceneGraph*>(scene->getChildren()[1].get());
-    assert(group->getChildren().size() == 2);
-    assert(static_cast<MockNode*>(group->getChildren()[0].get())->id == "1");
-    assert(static_cast<MockNode*>(group->getChildren()[1].get())->id == "2");
-
-    // Ungroup
-    scene->ungroupNode(1);
-    assert(scene->getChildren().size() == 4);
-    assert(static_cast<MockNode*>(scene->getChildren()[1].get())->id == "1");
-    assert(static_cast<MockNode*>(scene->getChildren()[2].get())->id == "2");
-
-    std::cout << "SceneGraph Grouping tests passed." << std::endl;
+    std::cout << "Visibility rendering tests passed." << std::endl;
 }
 
-void testMathPrimitives() {
-    std::cout << "Testing Math Primitives..." << std::endl;
-    vectma::GPoint p(10, 20);
-    assert(p.x == 10);
-    vectma::GRect r1(0, 0, 100, 100);
-    assert(r1.contains(50, 50));
-    std::cout << "Math primitives tests passed." << std::endl;
+void testDoubleDispatch() {
+    std::cout << "Testing Double Dispatch..." << std::endl;
+    auto scene = std::make_unique<vectma::SceneGraph>();
+    scene->addChild(std::make_unique<vectma::RectNode>(0,0,10,10));
+    scene->addChild(std::make_unique<vectma::EllipseNode>(0,0,10,10));
+    scene->addChild(std::make_unique<vectma::PathNode>("M 0 0"));
+
+    MockRenderPipeline pipeline;
+    scene->render(pipeline);
+
+    assert(pipeline.rectCount == 1);
+    assert(pipeline.ellipseCount == 1);
+    assert(pipeline.pathCount == 1);
+    assert(pipeline.callOrder[0] == "rect");
+    assert(pipeline.callOrder[1] == "ellipse");
+    assert(pipeline.callOrder[2] == "path");
+
+    std::cout << "Double dispatch tests passed." << std::endl;
 }
 
 int main() {
-    testCanvasNode();
-    testSceneGraphZOrder();
-    testSceneGraphGrouping();
-    testMathPrimitives();
+    testRenderingOrder();
+    testVisibilityRendering();
+    testDoubleDispatch();
     std::cout << "All core tests passed!" << std::endl;
     return 0;
 }

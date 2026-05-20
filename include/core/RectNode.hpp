@@ -10,9 +10,14 @@ public:
 
     std::string getClassName() const override { return "RectNode"; }
 
-    void draw(RenderPipeline& renderer) override;
+    void render(RenderPipeline& pipeline) const override;
     bool containsPoint(const GPoint& point) const override;
     GRect computeBoundingBox() const override;
+
+    double getX() const { return m_x; }
+    double getY() const { return m_y; }
+    double getW() const { return m_w; }
+    double getH() const { return m_h; }
 
 private:
     double m_x, m_y, m_w, m_h;

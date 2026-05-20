@@ -7,8 +7,8 @@ namespace vectma {
 EllipseNode::EllipseNode(double cx, double cy, double rx, double ry)
     : m_cx(cx), m_cy(cy), m_rx(rx), m_ry(ry) {}
 
-void EllipseNode::draw(RenderPipeline& renderer) {
-    renderer.renderNode(*this);
+void EllipseNode::render(RenderPipeline& pipeline) const {
+    pipeline.drawEllipse(*this);
 }
 
 bool EllipseNode::containsPoint(const GPoint& point) const {

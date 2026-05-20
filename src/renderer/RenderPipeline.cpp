@@ -3,20 +3,24 @@
 
 namespace vectma {
 
-void BaselineRenderer::beginFrame() {
-    // std::cout << "BaselineRenderer: Begin Frame" << std::endl;
+void BaselineRenderer::beginFrame() {}
+
+void BaselineRenderer::endFrame() {}
+
+void BaselineRenderer::drawRect(const RectNode& node) {
+    (void)node;
 }
 
-void BaselineRenderer::endFrame() {
-    // std::cout << "BaselineRenderer: End Frame" << std::endl;
+void BaselineRenderer::drawEllipse(const EllipseNode& node) {
+    (void)node;
+}
+
+void BaselineRenderer::drawPath(const PathNode& node) {
+    (void)node;
 }
 
 void BaselineRenderer::renderNode(const CanvasNode& node) {
-    // Recursive rendering logic would go here
-}
-
-void BaselineRenderer::drawPath(const std::string& pathData) {
-    // Path rendering logic would go here
+    (void)node;
 }
 
 } // namespace vectma

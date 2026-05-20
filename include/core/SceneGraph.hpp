@@ -18,7 +18,7 @@ public:
     std::string getClassName() const override { return "SceneGraph"; }
 
     // CanvasNode implementation
-    void draw(RenderPipeline& renderer) override;
+    void render(RenderPipeline& pipeline) const override;
     bool containsPoint(const GPoint& point) const override;
     GRect computeBoundingBox() const override;
 

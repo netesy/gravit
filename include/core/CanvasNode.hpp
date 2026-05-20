@@ -31,14 +31,21 @@ public:
     void addChild(std::unique_ptr<CanvasNode> child);
     const std::vector<std::unique_ptr<CanvasNode>>& getChildren() const;
 
+    // Visibility
+    bool isVisible() const { return m_visible; }
+    void setVisibility(bool visible) { m_visible = visible; }
+
+    // Dispatch Anchor for Visitor Pattern
+    virtual void render(RenderPipeline& pipeline) const = 0;
+
     // Geometric Interfaces
-    virtual void draw(RenderPipeline& renderer) = 0;
     virtual bool containsPoint(const GPoint& point) const = 0;
     virtual GRect computeBoundingBox() const = 0;
 
 protected:
     CanvasNode* m_parent = nullptr;
     std::vector<std::unique_ptr<CanvasNode>> m_children;
+    bool m_visible = true;
 };
 
 } // namespace vectma

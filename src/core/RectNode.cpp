@@ -6,8 +6,8 @@ namespace vectma {
 RectNode::RectNode(double x, double y, double w, double h)
     : m_x(x), m_y(y), m_w(w), m_h(h) {}
 
-void RectNode::draw(RenderPipeline& renderer) {
-    renderer.renderNode(*this);
+void RectNode::render(RenderPipeline& pipeline) const {
+    pipeline.drawRect(*this);
 }
 
 bool RectNode::containsPoint(const GPoint& point) const {

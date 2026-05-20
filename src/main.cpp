@@ -26,7 +26,7 @@ int main() {
 
         // Render scene
         if (workspace->getScene()) {
-            renderer->renderNode(*workspace->getScene());
+            workspace->getScene()->render(*renderer);
         }
 
         renderer->endFrame();

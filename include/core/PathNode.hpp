@@ -11,9 +11,11 @@ public:
 
     std::string getClassName() const override { return "PathNode"; }
 
-    void draw(RenderPipeline& renderer) override;
+    void render(RenderPipeline& pipeline) const override;
     bool containsPoint(const GPoint& point) const override;
     GRect computeBoundingBox() const override;
+
+    const std::string& getPathData() const { return m_pathData; }
 
 private:
     std::string m_pathData;
