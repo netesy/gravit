@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include "core/GPoint.hpp"
 
 namespace vectma {
 
@@ -39,6 +40,31 @@ struct GTransform {
             b * other.c + d * other.d,
             a * other.e + c * other.f + e,
             b * other.e + d * other.f + f
+        );
+    }
+
+    double det() const {
+        return a * d - b * c;
+    }
+
+    GTransform inverse() const {
+        double d_val = det();
+        if (std::abs(d_val) < 1e-9) return Identity();
+        double inv_det = 1.0 / d_val;
+        return GTransform(
+            d * inv_det,
+            -b * inv_det,
+            -c * inv_det,
+            a * inv_det,
+            (c * f - d * e) * inv_det,
+            (b * e - a * f) * inv_det
+        );
+    }
+
+    GPoint map(const GPoint& p) const {
+        return GPoint(
+            a * p.x + c * p.y + e,
+            b * p.x + d * p.y + f
         );
     }
 };

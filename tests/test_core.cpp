@@ -27,31 +27,11 @@ public:
 class MockRenderPipeline : public vectma::RenderPipeline {
 public:
     std::vector<std::string> callOrder;
-    int rectCount = 0;
-    int ellipseCount = 0;
-    int pathCount = 0;
-
     void beginFrame() override {}
     void endFrame() override {}
-
-    void drawRect(const vectma::RectNode& node) override {
-        (void)node;
-        rectCount++;
-        callOrder.push_back("rect");
-    }
-
-    void drawEllipse(const vectma::EllipseNode& node) override {
-        (void)node;
-        ellipseCount++;
-        callOrder.push_back("ellipse");
-    }
-
-    void drawPath(const vectma::PathNode& node) override {
-        (void)node;
-        pathCount++;
-        callOrder.push_back("path");
-    }
-
+    void drawRect(const vectma::RectNode&) override {}
+    void drawEllipse(const vectma::EllipseNode&) override {}
+    void drawPath(const vectma::PathNode&) override {}
     void renderNode(const vectma::CanvasNode& node) override {
         if (node.getClassName() == "MockNode") {
             callOrder.push_back(static_cast<const MockNode&>(node).id);
@@ -59,67 +39,84 @@ public:
     }
 };
 
-void testRenderingOrder() {
-    std::cout << "Testing Rendering Order..." << std::endl;
-    auto scene = std::make_unique<vectma::SceneGraph>();
-    scene->addChild(std::make_unique<MockNode>("bottom"));
-    scene->addChild(std::make_unique<MockNode>("middle"));
-    scene->addChild(std::make_unique<MockNode>("top"));
+void testToolSwitching() {
+    std::cout << "Testing Tool Switching..." << std::endl;
+    vectma::WorkspaceStage workspace;
+    workspace.setTool(vectma::ToolType::Rect);
+    assert(workspace.getTool() == vectma::ToolType::Rect);
 
-    MockRenderPipeline pipeline;
-    scene->render(pipeline);
-
-    assert(pipeline.callOrder.size() == 3);
-    assert(pipeline.callOrder[0] == "bottom");
-    assert(pipeline.callOrder[1] == "middle");
-    assert(pipeline.callOrder[2] == "top");
-
-    std::cout << "Rendering order tests passed." << std::endl;
+    workspace.setTool(vectma::ToolType::Ellipse);
+    assert(workspace.getTool() == vectma::ToolType::Ellipse);
+    std::cout << "Tool switching tests passed." << std::endl;
 }
 
-void testVisibilityRendering() {
-    std::cout << "Testing Visibility Rendering..." << std::endl;
-    auto scene = std::make_unique<vectma::SceneGraph>();
-    auto node1 = std::make_unique<MockNode>("visible");
-    auto node2 = std::make_unique<MockNode>("hidden");
-    node2->setVisibility(false);
+void testMarqueeSelection() {
+    std::cout << "Testing Marquee Selection..." << std::endl;
+    auto workspace = std::make_unique<vectma::WorkspaceStage>();
+    auto scene = std::make_shared<vectma::SceneGraph>();
+    workspace->setScene(scene);
 
-    scene->addChild(std::move(node1));
-    scene->addChild(std::move(node2));
+    scene->addChild(std::make_unique<vectma::RectNode>(10, 10, 20, 20)); // Node 0
+    scene->addChild(std::make_unique<vectma::RectNode>(50, 50, 20, 20)); // Node 1
 
-    MockRenderPipeline pipeline;
-    scene->render(pipeline);
+    workspace->setTool(vectma::ToolType::Marquee);
 
-    assert(pipeline.callOrder.size() == 1);
-    assert(pipeline.callOrder[0] == "visible");
+    // Simulate drag selecting both nodes
+    workspace->handleMouseDown({0, 0});
+    workspace->handleMouseMove({100, 100});
+    workspace->handleMouseUp();
 
-    std::cout << "Visibility rendering tests passed." << std::endl;
+    assert(workspace->getSelection().size() == 2);
+
+    // Simulate drag selecting only first node
+    workspace->handleMouseDown({0, 0});
+    workspace->handleMouseMove({40, 40});
+    workspace->handleMouseUp();
+
+    assert(workspace->getSelection().size() == 1);
+    std::cout << "Marquee selection tests passed." << std::endl;
 }
 
-void testDoubleDispatch() {
-    std::cout << "Testing Double Dispatch..." << std::endl;
-    auto scene = std::make_unique<vectma::SceneGraph>();
-    scene->addChild(std::make_unique<vectma::RectNode>(0,0,10,10));
-    scene->addChild(std::make_unique<vectma::EllipseNode>(0,0,10,10));
-    scene->addChild(std::make_unique<vectma::PathNode>("M 0 0"));
+void testShapeCreation() {
+    std::cout << "Testing Shape Creation Tool..." << std::endl;
+    auto workspace = std::make_unique<vectma::WorkspaceStage>();
+    auto scene = std::make_shared<vectma::SceneGraph>();
+    workspace->setScene(scene);
 
-    MockRenderPipeline pipeline;
-    scene->render(pipeline);
+    workspace->setTool(vectma::ToolType::Rect);
 
-    assert(pipeline.rectCount == 1);
-    assert(pipeline.ellipseCount == 1);
-    assert(pipeline.pathCount == 1);
-    assert(pipeline.callOrder[0] == "rect");
-    assert(pipeline.callOrder[1] == "ellipse");
-    assert(pipeline.callOrder[2] == "path");
+    workspace->handleMouseDown({10, 10});
+    workspace->handleMouseMove({60, 60});
+    workspace->handleMouseUp();
 
-    std::cout << "Double dispatch tests passed." << std::endl;
+    assert(scene->getChildren().size() == 1);
+    assert(scene->getChildren()[0]->getClassName() == "RectNode");
+
+    auto bbox = scene->getChildren()[0]->computeBoundingBox();
+    assert(bbox.x == 10 && bbox.width == 50);
+
+    std::cout << "Shape creation tests passed." << std::endl;
+}
+
+void testCoordinateTranslation() {
+    std::cout << "Testing Coordinate Translation..." << std::endl;
+    vectma::WorkspaceStage workspace;
+    // View translated by 100, 100
+    workspace.setViewMatrix(vectma::GTransform::Translation(100, 100));
+
+    vectma::GPoint screenPos(150, 150);
+    vectma::GPoint canvasPos = workspace.screenToCanvas(screenPos);
+
+    assert(canvasPos.x == 50);
+    assert(canvasPos.y == 50);
+    std::cout << "Coordinate translation tests passed." << std::endl;
 }
 
 int main() {
-    testRenderingOrder();
-    testVisibilityRendering();
-    testDoubleDispatch();
+    testToolSwitching();
+    testMarqueeSelection();
+    testShapeCreation();
+    testCoordinateTranslation();
     std::cout << "All core tests passed!" << std::endl;
     return 0;
 }

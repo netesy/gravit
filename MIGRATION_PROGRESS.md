@@ -21,7 +21,7 @@
 - [x] Core Objects (`reverse-engineering/reconstructed/infinity/core/`)
 - [x] Scene Management (`reverse-engineering/reconstructed/infinity/scene/`)
 - [x] Rendering Engine (`reverse-engineering/reconstructed/infinity/rendering/`)
-- [ ] Editor Actions (`reverse-engineering/reconstructed/editor/`)
+- [x] Editor Actions (`reverse-engineering/reconstructed/editor/`)
 
 ## Verification
 - [x] Baseline Functional Compilation
