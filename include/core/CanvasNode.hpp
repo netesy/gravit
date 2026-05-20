@@ -1,0 +1,35 @@
+#pragma once
+
+#include <string>
+#include <vector>
+#include <memory>
+
+namespace vectma {
+
+/**
+ * @brief Abstract polymorphic base class for all scene objects.
+ * Replaces the legacy GObject.
+ */
+class CanvasNode {
+public:
+    CanvasNode();
+    virtual ~CanvasNode();
+
+    // Disable copying for unique ownership management
+    CanvasNode(const CanvasNode&) = delete;
+    CanvasNode& operator=(const CanvasNode&) = delete;
+
+    virtual std::string getClassName() const = 0;
+
+    void setParent(CanvasNode* parent);
+    CanvasNode* getParent() const;
+
+    void addChild(std::unique_ptr<CanvasNode> child);
+    const std::vector<std::unique_ptr<CanvasNode>>& getChildren() const;
+
+protected:
+    CanvasNode* m_parent = nullptr;
+    std::vector<std::unique_ptr<CanvasNode>> m_children;
+};
+
+} // namespace vectma
