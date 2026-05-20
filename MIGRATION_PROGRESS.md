@@ -26,3 +26,9 @@
 ## Verification
 - [x] Baseline Functional Compilation
 - [x] Core Logic Unit Tests
+
+### UI Layer (Legacy -> Native)
+- [x] Premium Dark Theme
+- [x] Floating Modality Toolbar
+- [x] Adaptive Inspector Window
+- [x] Hardware Viewport Integration
